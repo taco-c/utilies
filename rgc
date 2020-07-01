@@ -1,0 +1,10 @@
+#!/bin/sh
+
+_compile() {
+    _output="$(basename "$1" .${1##*.}).pdf"
+    groff -ms -Tpdf -Kutf8 -P-pa4 -dpaper=a4 "$1" > $_output
+}
+
+[ "$1" = "" ] && echo -e "The groff-compiler-wrapper\nUsage: rgc file" && exit
+
+_compile "$1"
