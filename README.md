@@ -11,5 +11,5 @@ A handful of (useful) scripts for unix-like systems.
 | `rgc` | | Groff to PDF compiler. |
 | `update-stagit.sh` | [stagit](https://git.codemadness.org/stagit/file/README.html) | Makes static html pages for all repos in `/srv/git/` into `/srv/http/`, and an index page. |
 | `wifi-select` | `rofi` or `dmenu`, NetworkManager | Connect to a wifi with NetworkManager. |
-| `wiktionaire` | `rofi` or `dmenu`, `surf` or another web browser. | Search for word on Wiktionary from the desktop. |
+| `wiktionaire` | `rofi` or `dmenu`, `surf` or another web browser | Search for word on Wiktionary from the desktop. |
 
