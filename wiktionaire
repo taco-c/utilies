@@ -1,0 +1,13 @@
+#!/bin/sh
+
+wikt_dir="$XDG_DATA_HOME/wiktionaire"
+wikt_hist="$wikt_dir/history"
+[ ! -e "$wikt_dir" ] && mkdir -p $wikt_dir
+
+[ "$1" = "" ]    && word="$(tac $wikt_hist | uniq | rofi -dmenu -theme sidebar -p "Søk på wiktionary:" | tee -a $wikt_hist)"
+[ "$1" = "uib" ] && word="$(tac $wikt_hist | uniq | rofi -dmenu -theme sidebar -p "Søk i ordbøkene:"   | tee -a $wikt_hist)"
+
+[ "$1" = "" ]    && url="$(echo $word | sed 's/.*/https:\/\/en.wiktionary.org\/w\/index.php?search=\0/')"
+[ "$1" = "uib" ] && url="$(echo $word | sed 's/.*/https:\/\/ordbok.uib.no\/perl\/ordbok.cgi?OPP=\0\&ant_bokmaal=5\&ant_nynorsk=5\&begge=+\&ordbok=begge/')"
+
+[ "$word" != "" ] && surf "$url"
