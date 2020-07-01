@@ -1,0 +1,24 @@
+#!/bin/sh
+
+_connect() {
+    # Gets list of saved configurations.
+    _saved_nets=`nmcli -f NAME con show | grep -v "^NAME"`
+
+    # Gets available networks.
+    _ssids=`nmcli device wifi list | grep -v "^IN" | cut -c2- | awk '{print $2}' | grep -v "^--$"`
+
+    # Filter the available networks based on the saved ones, and send to rofi.
+    _ssid=`echo "$_saved_nets" | grep "$_ssids" | rofi -dmenu`
+
+    [ "$_ssid" = "" ] && exit
+
+    nmcli device wifi connect $_ssid >/dev/null
+    _notify_current
+}
+
+_notify_current() {
+    _current=`nmcli device status | grep "^wls3" | awk '{print $4}'`
+    notify-send "IEEE 802.11b-nettverk" "$_current" --urgency=low
+}
+
+[ "$1" = "-n" ] && _notify_current || _connect
