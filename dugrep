@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Find all files with the .$1 extention, lets you choose one, then exec with $2.
+
+file=`du -a $HOME --exclude=".*" 2>/dev/null | grep "\.$1$" | cut -f2 | rofi -dmenu -theme sidebar -p :`
+
+[ "$file" = "" ] && exit
+
+[ "$2" = "$EDITOR" ] && [ "$3" = "-" ] && $TERMINAL -e "$EDITOR \"$file\"" && exit
+
+"$2" "$file"
+
+#xargs -r -d "\n" "$2"
