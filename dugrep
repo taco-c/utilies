@@ -2,7 +2,16 @@
 
 # Find all files with the .$1 extention, lets you choose one, then exec with $2.
 
-file=`du -a $HOME --exclude=".*" 2>/dev/null | grep "\.$1$" | cut -f2 | rofi -dmenu -theme sidebar -p :`
+# theme="-theme sidebar"
+theme=""
+
+_filter_files() {
+    for ext in $(echo $1 | tr "," "\n"); do
+        du -a $HOME --exclude=".*" | cut -f2 | grep "\.$ext$"
+    done
+}
+
+file=`_filter_files "$1" | sort | rofi -width 75% -dmenu -i $theme -p :`
 
 [ "$file" = "" ] && exit
 
