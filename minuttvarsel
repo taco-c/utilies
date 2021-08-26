@@ -1,0 +1,6 @@
+#!/bin/sh
+
+while :; do
+	sleep 1m
+	notify-send "Un minuto"
+done

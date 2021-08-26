@@ -1,0 +1,5 @@
+#!/bin/sh
+
+img="$XDG_DATA_HOME/backweb/img.png"
+
+[ -f "$img" ] && i3lock -ei "$img"

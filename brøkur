@@ -1,0 +1,32 @@
+#!/bin/sh
+
+m="$(date '+%_M' | tr -d ' ')"
+
+if [ $m -lt "5" ]; then
+		M=""
+elif [ $m -lt "13" ]; then
+		M="⅙"
+elif [ $m -lt "18" ]; then
+		M="¼"
+elif [ $m -lt "25" ]; then
+		M="⅓"
+elif [ $m -lt "35" ]; then
+		M="½"
+elif [ $m -lt "43" ]; then
+		M="⅓"
+elif [ $m -lt "48" ]; then
+		M="¼"
+elif [ $m -lt "55" ]; then
+		M="⅙"
+else
+		M=""
+fi
+
+if [ $m -gt "24" ]; then
+		h="$(date -d "1 hour" '+%_I' | tr -d ' ')"
+		echo "$M$h"
+else
+		h="$(date '+%_I' | tr -d ' ')"
+		echo "$h$M"
+fi
+

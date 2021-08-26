@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# WM
+bspc wm -r
+
+# Backweb-skript
+#pkill backweb && backweb &
+
+# Sxhkd
+pkill -USR1 -x sxhkd
+
+# Lemonbar
+pkill polybar
+
+# Set wallpaper
+xwallpaper --zoom ~/.config/wallpaper &
+
+#xdo above -t $(xdo id -n root) $(xdo id -n lemonbar)
+

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+dir=$XDG_CONFIG_HOME/keymaps
+
+_set () {
+	xkbcomp "$dir/$1.xkbmap" $DISPLAY && echo "$1" > "$dir/current-layout"
+}
+
+_toggle() {
+	if [ -f "$dir/current-layout" ]; then
+		layout="$(cat $dir/current-layout)"
+		case $layout in
+			"NO") _set "RU";;
+			"RU") _set "NO";;
+		esac
+	fi
+}
+
+[ "$1" = "toggle" ] && _toggle && exit 0
+[ "$1" = "set" ] && [ "$2" != "" ] && _set "$2" && exit 0
+
+echo "Usage: xkbutil [toggle|set layout]"
+

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+_toggle() {
+	if [ "$(pulsemixer --get-mute)" = "1" ]; then
+		pulsemixer --unmute
+	else
+		pulsemixer --mute
+	fi
+}
+
+_change() {
+	pulsemixer --change-volume "$1"
+}
+
+_set() {
+	pulsemixer --set-volume "$1"
+}
+
+_print() {
+	vol=$(pulsemixer --get-volume | awk '{print $1}')
+	[ "$(pulsemixer --get-mute)" = "1" ] && vol="M"
+	echo "$vol%"
+}
+
+[ "$1" = "" ] && _print && exit
+[ "$1" = "toggle" ] && _toggle
+[ "$1" = "change" ] && [ "$2" != "" ] && _change "$2"
+[ "$1" = "set" ] && [ "$2" != "" ] && _set "$2"
+
+[ "$WM" = "i3" ] && pkill -RTMIN+10 i3blocks
+

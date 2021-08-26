@@ -1,0 +1,6 @@
+#!/bin/sh
+
+[ "$1" = "desktops" ] && pkill -SIGRTMIN+1 lemonblocks
+[ "$1" = "volume" ] && pkill -SIGRTMIN+2 lemonblocks
+[ "$1" = "keymap" ] && pkill -SIGRTMIN+3 lemonblocks
+

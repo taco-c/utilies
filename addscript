@@ -1,0 +1,13 @@
+#!/bin/sh
+
+[ "$1" = "" ] && echo "Need name of script" && exit 1
+
+_filename="$HOME/.local/bin/$1"
+
+[ -f "$_filename" ] && nvim "$_filename" && exit
+
+touch "$_filename"
+chmod +x "$_filename"
+echo -e "#! /bin/sh\n\n" > "$_filename"
+nvim "$_filename"
+

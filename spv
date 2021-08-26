@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Search Play Video
+
+[ "$1" != "" ] && query="$@" || query=`rofi -dmenu -p "Finn video" -lines 0`
+[ "$query" = "" ] && exit 1
+
+# json=`youtube-dl ytsearch:"$query" -x - | sed 1q`
+json=`youtube-dl ytsearch:"$query" -j`
+
+title=`echo $json | jq ".title"`
+url=`echo $json | jq ".formats | map(select(.vcodec==\"none\")) | .[-1].url"`
+channel=`echo $json | jq ".uploader"`
+
+_trimquotes () {
+	temp="${1%\"}"
+	echo "${temp#\"}"
+}
+
+notify-send "`_trimquotes "$title"`" "`_trimquotes "$channel"`"
+
+mpv "`_trimquotes "$url"`"
+

@@ -1,0 +1,16 @@
+#! /bin/sh
+
+_configfile="$XDG_CONFIG_HOME/cryptorc"
+
+alias config_not_exists\?="[ ! -x $_configfile ]"
+alias source_config=". $_configfile"
+alias exit_with_error="echo 'ERROR: Config file nonexistent or not executable.' && exit"
+
+config_not_exists? && exit_with_error || source_config
+
+alias get="curl -s 'http://$currency.rate.sx/$amount'"
+alias floor="cut -d. -f1"
+alias xprint="xargs printf '%s kr\n'"
+
+get | floor | xprint
+

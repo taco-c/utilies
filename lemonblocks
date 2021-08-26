@@ -1,0 +1,115 @@
+#!/bin/sh
+
+_desktops() {
+	#desktops=$(bspc query -D --names)
+	active_desktop=$(bspc query -D -d --names)
+	for d in $(bspc query -D -m --names); do
+		[ $active_desktop = $d ] && item="%{R}  $d  %{R}" || item="  $d  "
+		ret="$ret$item"
+	done
+	echo "$ret "
+}
+
+_keymap() {
+	cat "$XDG_CONFIG_HOME/keymaps/current-layout"
+}
+
+_window_title() {
+	echo ""
+}
+
+# mute icon: \uf6a9
+_volume() {
+	_vol_info=$(amixer sget Master | grep "Front Left:")
+	_vol=$(echo $_vol_info | awk '{print $5}' | tr -d "[]%")%
+	[ "$(echo $_vol_info | awk '{print $7}')" = "[off]" ] && _vol="M"
+	echo -e " V$_vol "
+}
+
+_battery() {
+	batinfo=$(acpi --battery)
+	BATPERC=B$(echo $batinfo | cut -d, -f2 | cut -d" " -f2 | cut -d% -f1)
+	state=$(echo $batinfo | awk '{print $3}' | cut -d, -f1)
+	
+	bat=" $BATPERC% "
+
+	if [ "$state" = "Discharging" ]; then
+		[ "$BATPERC" = "15" ] && notify-send --urgency=low "Lavt batteri!" "15%"
+		[ "$BATPERC" = "10" ] && notify-send --urgency=normal "Veldig lavt batteri!" "10%"
+		[ "$BATPERC" -lt "6" ] && notify-send --urgency=critical "Ektremt lavt batteri!" "$BATPERC%"
+		
+		if [ "$BATPERC" -lt "11" ]; then
+			bat="%{B#ff0000} $BATPERC% %{B-}"
+		elif [ "$BATPERC" -lt "41" ]; then
+			bat="%{B#ffff00}%{F#000000} $BATPERC% %{F-}%{B-}"
+		fi
+	elif [ "$state" = "Full" ]; then
+		bat="%{B#00ff00}%{F#000000} $BATPERC% %{F-}%{B-}"
+	fi
+	
+	echo "$bat"
+}
+
+_clock() {
+	#DATETIME=$(date "+%A %d. %B %Y - %I:%M")
+	#DATETIME=$(date "+%-I:%-M")
+	#DATETIME=$(ordur)
+	DATETIME=$(brøkur)
+	echo "$DATETIME"
+}
+
+_window_title() {
+	_title=`bspc query --node focused.window -T | jq ".client.className"`
+	_title="${_title%\"}"
+	_title="${_title#\"}"
+	echo "$_title"
+}
+
+_update() {
+	echo -e "%{l}$desks%{c}$(_clock)%{r}$keym%{R} $vol %{R}$(_battery)" &
+	wait
+}
+
+_update_desktops() {
+	desks=$(_desktops)
+	_update
+}
+
+_update_volume() {
+	vol=$(_volume)
+	_update
+}
+
+_update_keymap() {
+	keym=" $(_keymap) "
+	_update
+}
+
+_update_window_title() {
+	#while true; do
+		win_title=" $(_window_title) "
+		_update
+	#	sleep 1s
+	#	wait
+	#done
+}
+
+_update_desktops > /dev/null
+_update_volume > /dev/null
+_update_keymap > /dev/null
+# _update_window_title > /dev/null
+
+_lemonblocks() {
+	trap "_update_desktops" SIGRTMIN+1
+	trap "_update_volume" SIGRTMIN+2
+	trap "_update_keymap" SIGRTMIN+3
+	
+	while true; do
+		_update
+		sleep 1m &
+		wait
+	done
+}
+
+_lemonblocks | lemonbar -p -g x24 -B "#44111111" -F "#FFFFFF" -f "Go:size=10" | $SHELL
+

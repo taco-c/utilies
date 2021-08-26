@@ -1,0 +1,6 @@
+#!/bin/sh
+
+[ -n "$1" ] && img=`realpath $1` || img=`sxiv $HOME/img/* -ot | head -n 1`
+
+ln -sf "$img" ~/.config/wallpaper
+xwallpaper --zoom ~/.config/wallpaper

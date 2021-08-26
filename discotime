@@ -1,0 +1,6 @@
+#! /bin/sh
+
+mpv "https://www.youtube.com/playlist?list=PL8RuAUpRy-Eo6N1zMN196VofrLJTG4XmJ" \
+	--no-video \
+	--player-operation-mode=pseudo-gui
+
