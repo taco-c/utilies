@@ -1,0 +1,62 @@
+#!/bin/sh
+
+out_type="pdf"
+
+while getopts "o:pt:" o; do
+	case "$o" in
+		o) out_name=$OPTARG ;;
+		p) print=true ;;
+		t) out_type=$OPTARG ;;
+	esac
+done
+shift "$((OPTIND-1))"
+
+[ "$1" = "" ] && echo "no file provided" && exit
+[ ! -f "$1" ] && echo "no such file: $1" && exit
+
+prefix="/tmp/mdview_"
+tmp_md="${prefix}${1}.md"
+tmp_pdf="${prefix}${1}.${out_type}"
+
+cp "$1" "$tmp_md"
+
+echo '
+<style>
+	html {
+		font-family: "PT Serif", serif
+	}
+
+	body {
+		max-width: 100%; padding: 0;
+	}
+
+	h3, h4, h5, h6 {
+		margin-bottom: -0.75em;
+	}
+
+	h2 {
+		border-bottom: 1px solid;
+		/*page-break-before: always;*/
+	}f th
+
+	img {
+		display: block;
+		margin: auto;
+	}
+</style>' >> "$tmp_md"
+
+pandoc -s -t html -o "$tmp_pdf" "$tmp_md" 2>/dev/null
+
+rm_tmps() {
+	rm "$tmp_md"
+	rm "$tmp_pdf"
+}
+
+[ "$print" = "true" ] && lpr "$tmp_pdf" && rm_tmps && exit
+[ "$out_name" = "-" ] && cat "$tmp_pdf" && rm_tmps && exit
+if [ -z "$out_name" ]; then
+	[ "$out_type" = "pdf" ] && zathura "$tmp_pdf" && rm_tmps &
+	[ "$out_type" = "html" ] && surf "$tmp_pdf" 2>/dev/null && rm_tmps &
+fi
+[ -n "$out_name" ] && cp "$tmp_pdf" "$out_name"
+
