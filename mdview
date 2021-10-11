@@ -37,7 +37,7 @@ echo '
 	h2 {
 		border-bottom: 1px solid;
 		/*page-break-before: always;*/
-	}f th
+	}
 
 	img {
 		display: block;
