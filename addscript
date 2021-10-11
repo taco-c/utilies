@@ -8,6 +8,6 @@ _filename="$HOME/.local/bin/$1"
 
 touch "$_filename"
 chmod +x "$_filename"
-echo -e "#! /bin/sh\n\n" > "$_filename"
+echo "#!/bin/sh\n\n" > "$_filename"
 nvim "$_filename"
 
