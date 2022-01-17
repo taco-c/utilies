@@ -1,0 +1,15 @@
+#!/bin/sh
+
+today=`date "+%m.%d"`
+
+case "$today" in
+#	"01.01") echo "Nyttårsdag" ;;
+	"01.06") echo "Hellige tre kongers dag / trettendedagen" ;;
+	"01.07") echo "Eldbjørgdagen" ;;
+	"01.11") echo "Brettemesse" ;;
+	"01.13") echo "Tjuendedagen / knutsok" ;;
+	"01.17") echo "Vinterdagen" ;;
+	"01.25") echo "Pålsmesse" ;;
+	
+	"02.02") echo "Kyndelsmesse" ;;
+esac
