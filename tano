@@ -1,0 +1,62 @@
+#!/bin/sh
+
+# Configurations
+editor="$EDITOR"
+markdown_converter="markdown"
+html_browser="lynx"
+selector="fzf"
+pager="less"
+
+
+index_tags() {
+	grep -Poir --no-filename "^#\s.*\s\[.*\]$" . \
+		| grep -Po "\[(.*)\]" \
+		| sed 's/\[\(.*\)\]/\1/' \
+		| sed "s/,\s*/\n/g" \
+		| sort \
+		| uniq
+}
+
+
+find_file() {
+    q="$1"
+    while [ 1 ]; do
+        [ -z "$q" ] \
+            && tag="$(index_tags | "$selector")" \
+            || tag="$1"
+        q="" # Only check query first time.
+	    [ -z "$tag" ] && exit 1
+        file="$(grep -Pir --color=auto "\[.*\b($tag)\b.*\]" . | "$selector" | awk -F: '{print $1}')"
+        [ -n "$file" ] && echo "$file" && break
+    done
+}
+
+
+tags_edit() {
+	file="$(find_file "$1")"
+	[ -z "$file" ] && exit 1
+
+	"$editor" "$file"
+}
+
+
+tags_view() {
+	file="$(find_file "$1")"
+	[ -z "$file" ] && exit 1
+
+	"$markdown_converter" "$file" | "$html_browser" -stdin --dump | less
+}
+
+
+# args:
+#     -e      edit
+#     -i      index
+#     -d dir  directory (default: ".")
+#     -t tag  tag search
+
+
+case "$1" in
+	"edit" |"-e") tags_edit  "$2" ;;
+	"index"|"-i") index_tags ;;
+	*)            tags_view  "$1" ;;
+esac

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+pomodoro() {
+	sleep "$1"
+	notify-send -u critical -t 0 "Pomo" "$2"
+	mpv "$HOME/shanti55.ogg"
+}
+
+case "$1" in
+	"break"|"-b")
+		t="5m"
+		[ -n "$2" ] && t="$2"
+		pomodoro "$t" "Break is done."
+		;;
+	"start"|"-s")
+		t="25m"
+		[ -n "$2" ] && t="$2"
+		pomodoro "$t" "Pomodoro is done."
+		;;
+	"-h"|*)
+		echo "usage: pomo [option]"
+		echo
+		echo "options:"
+		echo "    -s, start DURATION  -- start a pomodoro lasting for DURATION (default: 25m)"
+		echo "    -b, break DURATION  -- take a break lasting for DURATION (default: 5m)"
+esac
+
