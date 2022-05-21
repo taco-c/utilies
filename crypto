@@ -1,10 +1,32 @@
 #! /bin/sh
 
+# Written in a FORTH-like manner. Experimentally.
+
+usage() {
+    echo "crypto -- calculates value of your crypto portfolio with rate.sx"
+    echo
+    echo "USAGE"
+    echo "\t\$XDG_CONFIG_HOME/cryptorc should be an executable file that is"
+    echo "\tsetting the following enviromental variables:"
+    echo
+    echo "\t* currency: the currency you want to show the result in."
+    echo "\t* amount:   the crypto values, separated by \"+\", as it is"
+    echo "\t            the format rate.sx accepts."
+    echo
+    echo "EXAMPLE CRYPTORC"
+    echo "\t#!/bin/sh"
+    echo "\tcurrency=\"eur\""
+    echo "\tamount=\"0.55btc+11eth\""
+    exit 1
+}
+
+[ "$1" = "-h" ] && usage
+
 _configfile="$XDG_CONFIG_HOME/cryptorc"
 
 alias config_not_exists\?="[ ! -x $_configfile ]"
 alias source_config=". $_configfile"
-alias exit_with_error="echo 'ERROR: Config file nonexistent or not executable.' && exit"
+alias exit_with_error="echo 'Error: config file nonexistent or not executable' && exit"
 
 config_not_exists? && exit_with_error || source_config
 

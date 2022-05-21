@@ -1,13 +1,26 @@
 #!/bin/sh
 
-[ "$1" = "" ] && echo "Need name of script" && exit 1
+# Configuration
+[ -n "$BIN_HOME" ] \
+    && dir="$BIN_HOME" \
+    || dir="$HOME/.local/bin"
 
-_filename="$HOME/.local/bin/$1"
+usage() {
+    echo "addscript -- create boilerplate executable file and edit"
+    echo
+    echo "Usage: addscript NAME"
+    exit 1
+}
 
-[ -f "$_filename" ] && nvim "$_filename" && exit
+[ -z "$1" ] || [ "$1" = "-h" ] && usage
 
-touch "$_filename"
-chmod +x "$_filename"
-echo "#!/bin/sh\n\n" > "$_filename"
-nvim "$_filename"
+filename="$dir/$1"
+
+# File already exists
+[ -f "$filename" ] && $EDITOR "$filename" && exit
+
+# File does not exist
+echo "#!/bin/sh\n\n" > "$filename"
+chmod +x "$filename"
+$EDITOR "$filename"
 

@@ -1,22 +1,37 @@
 #!/bin/sh
 
-# Find all files with the .$1 extention, lets you choose one, then exec with $2.
+# Configuration
+#theme="-theme sidebar"
+selector="rofi -width 75% -dmenu -i $theme -p :"
 
-# theme="-theme sidebar"
-theme=""
+usage() {
+    echo "dugrep -- finds all files with the .\$1 extention"
+    echo "          lets you choose one, then exec with \$2."
+    echo
+    echo "USAGE"
+    echo "\tdugrep EXT EXE [-]"
+    echo
+    echo "\tUse \"-\" to open EXE in a new terminal."
+    exit 1
+}
 
-_filter_files() {
-    for ext in $(echo $1 | tr "," "\n"); do
+[ -z "$1" ] || [ -z "$2" ] || [ "$1" = "-h" ] \
+    && usage
+
+
+filter_files() {
+    for ext in $(echo "$1" | tr "," "\n"); do
         du -a $HOME --exclude=".*" | cut -f2 | grep "\.$ext$"
     done
 }
 
-file=`_filter_files "$1" | sort | rofi -width 75% -dmenu -i $theme -p :`
+file=$(filter_files "$1" | sort | $selector)
+[ -z "$file" ] && exit
 
-[ "$file" = "" ] && exit
+[ "$3" = "-" ] \
+    && $TERMINAL -e "$2 \"$file\"" && exit
 
-[ "$2" = "$EDITOR" ] && [ "$3" = "-" ] && $TERMINAL -e "$EDITOR \"$file\"" && exit
-
-"$2" "$file"
+$2 "$file"
 
 #xargs -r -d "\n" "$2"
+
