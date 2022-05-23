@@ -2,7 +2,7 @@
 
 # Configurations
 editor="$EDITOR"
-markdown_converter="markdown"
+markdown_converter="markdown" # Preferably from package `discount`.
 html_browser="lynx"
 selector="fzf"
 pager="less"

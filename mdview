@@ -1,9 +1,33 @@
 #!/bin/sh
 
+# DEPENDENCIES
+#  * pandoc
+#  * zathura
+
+# CONFIGURATION
 out_type="pdf"
 
-while getopts "o:pt:" o; do
+usage() {
+    echo "mdview -- convert and view markdown files as PDF or HTML."
+    echo "          With added style."
+    echo
+    echo "SYNOPSIS"
+    echo "\tmdview [-hp] [-o OUTPUT] [-t TYPE] FILE"
+    echo
+    echo "\tFILE is a markdown file."
+    echo
+    echo "OPTIONS"
+    echo "\t-h         Show this help page and exits."
+    echo "\t-o OUTPUT  Name of file to output to. If unset, will open given"
+    echo "\t           markdown file in either a web browser or pdf reader."
+    echo "\t-p         Print output "
+    echo "\t-t TYPE    Can be either \"pdf\" or \"html\""
+    exit 1
+}
+
+while getopts "ho:pt:" o; do
 	case "$o" in
+        h) usage ;;
 		o) out_name=$OPTARG ;;
 		p) print=true ;;
 		t) out_type=$OPTARG ;;
@@ -11,7 +35,6 @@ while getopts "o:pt:" o; do
 done
 shift "$((OPTIND-1))"
 
-[ "$1" = "" ] && echo "no file provided" && exit
 [ ! -f "$1" ] && echo "no such file: $1" && exit
 
 prefix="/tmp/mdview_"
