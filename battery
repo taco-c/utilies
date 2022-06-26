@@ -1,0 +1,12 @@
+#!/bin/sh
+
+batteries=$(ls /sys/class/power_supply/BAT*/capacity)
+n_batteries=$(echo "$batteries" | wc -l)
+
+adding="0"
+for battery in $batteries; do
+	adding="$adding + $(cat $battery)"
+done
+
+printf "%s%%\n" "$(expr \( $adding \) / $n_batteries)"
+
