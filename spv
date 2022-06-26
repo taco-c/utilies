@@ -9,7 +9,8 @@
 json=`youtube-dl ytsearch:"$query" -j`
 
 title=`echo $json | jq ".title"`
-url=`echo $json | jq ".formats | map(select(.vcodec==\"none\")) | .[-1].url"`
+#url=`echo $json | jq ".formats | map(select(.vcodec==\"none\")) | .[-1].url"`
+url=`echo $json | jq ".formats | .[-1].url"`
 channel=`echo $json | jq ".uploader"`
 
 _trimquotes () {

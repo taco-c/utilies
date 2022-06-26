@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 pomodoro() {
 	sleep "$1"
@@ -6,16 +6,28 @@ pomodoro() {
 	mpv "$HOME/shanti55.ogg"
 }
 
+countdown() {
+	m=$(($1 * 60))
+	start="$(( $(date '+%s') + $m))"
+	while [ $start -ge $(date +%s) ]; do
+		time="$(( $start - $(date +%s) ))"
+		printf "\\r%s minutes untill $2" "$(date -u -d "@$time" +%-M)"
+		sleep 0.2
+	done
+	notify-send -u critical -t 0 "Pomo" "$2"
+	mpv "$HOME/shanti55.ogg"
+}
+
 case "$1" in
 	"break"|"-b")
-		t="5m"
+		t="5"
 		[ -n "$2" ] && t="$2"
-		pomodoro "$t" "Break is done."
+		countdown "$t" "Break is done."
 		;;
 	"start"|"-s")
-		t="25m"
+		t="25"
 		[ -n "$2" ] && t="$2"
-		pomodoro "$t" "Pomodoro is done."
+		countdown "$t" "Pomodoro is done."
 		;;
 	"-h"|*)
 		echo "usage: pomo [option]"
