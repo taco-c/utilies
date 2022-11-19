@@ -1,0 +1,4 @@
+#!/bin/sh
+
+maim -s > "$HOME/$(date '+screenshot-%Y.%m.%d-%H.%M.%S.png')"
+
