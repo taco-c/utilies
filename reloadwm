@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # WM
-bspc wm -r
+#bspc wm -r
 
 # Backweb-skript
 #pkill backweb && backweb &
@@ -10,10 +10,12 @@ bspc wm -r
 pkill -USR1 -x sxhkd
 
 # Lemonbar
-pkill polybar
+#pkill polybar
 
 # Set wallpaper
 xwallpaper --zoom ~/.config/wallpaper &
 
 #xdo above -t $(xdo id -n root) $(xdo id -n lemonbar)
+
+notify-send "reloadwm" "OK"
 
