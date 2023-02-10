@@ -1,17 +1,19 @@
 #!/bin/sh
 
-dir=$XDG_CONFIG_HOME/keymaps
+data_dir="$XDG_DATA_HOME/xkbutil"
+[ ! -d "$data_dir" ] && mkdir -p "$data_dir"
+layout_file="$dir/current-layout"
 
 _set () {
-	xkbcomp "$dir/$1.xkbmap" $DISPLAY && echo "$1" > "$dir/current-layout"
+	setxkbmap "$1" && echo "$1" > "$layout_file"
 }
 
 _toggle() {
-	if [ -f "$dir/current-layout" ]; then
-		layout="$(cat $dir/current-layout)"
+	if [ -f "$layout_file" ]; then
+		layout="$(cat $layout_file)"
 		case $layout in
-			"NO") _set "RU";;
-			"RU") _set "NO";;
+			"no") _set "ru";;
+			"ru") _set "no";;
 		esac
 	fi
 }

@@ -1,7 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
-filename="$HOME/$(date '+screenshot-%Y.%m.%d-%H.%M.%S.png')"
+maim_cmd="maim $2"
 
-maim $@ > "$filename" \
-	&& notify-send "Screenshot saved" "$filename"
+if [ "$1" = "save" ]; then
+	output="$HOME/$(date '+screenshot-%Y.%m.%d-%H.%M.%S.png')"
+	$maim_cmd > $output
+elif [ "$1" = "copy" ]; then
+	output="xclip -i -selection clipboard -t image/png"
+	$maim_cmd | $output
+else
+	echo "usage: screenshot save|copy [maim arguments]" >&2 && exit 1
+fi \
+	&& notify-send "Screenshot taken" "$output" \
+	|| notify-send "Error saving screenshot"
 
