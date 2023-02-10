@@ -1,5 +1,20 @@
 #!/bin/sh
 
+usage() {
+	echo "nn.sh [-h] [-w PREVIRE_WINDOW_OPTS"
+	exit
+}
+
+preview_window_opts="up"
+
+while getopts "hw:" opt; do
+	case $opt in
+		w) preview_window_opts="$OPTARG" ;;
+		h) usage ;;
+	esac
+done
+shift $(($OPTIND - 1))
+
 [ -n "$1" ] && dir="$1" || dir="."
 
 while : ; do
@@ -7,7 +22,7 @@ while : ; do
 		| sort -nr \
 		| cut -d" " -f2- \
 		| sed -e 's|/| » |g' \
-		| fzf --preview-window=up \
+		| fzf --preview-window="$preview_window_opts" \
 			--preview='echo "{}" | sed -e "s| » |/|g" | xargs glow --style dark')"
 
 	[ "$?" = 130 ] && break
