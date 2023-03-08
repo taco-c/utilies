@@ -5,7 +5,7 @@ usage() {
 	exit
 }
 
-preview_window_opts="up"
+preview_window_opts="up,75%"
 
 while getopts "hw:" opt; do
 	case $opt in
@@ -23,7 +23,7 @@ while : ; do
 		| cut -d" " -f2- \
 		| sed -e 's|/| » |g' \
 		| fzf --preview-window="$preview_window_opts" \
-			--preview='echo "{}" | sed -e "s| » |/|g" | xargs batcat --decorations=never --color always --theme gruvbox-dark')"
+			--preview='echo "{}" | sed -e "s| » |/|g" | xargs bat --decorations=never --color always --theme gruvbox-dark')"
 
 	[ "$?" = 130 ] && break
 	file="$(echo $file | sed -e 's| » |/|g')"
