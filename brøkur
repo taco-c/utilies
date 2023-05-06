@@ -2,24 +2,38 @@
 
 m="$(date '+%_M' | tr -d ' ')"
 
-if [ $m -lt "5" ]; then
+if [ "$1" = "-6" ]; then
+	if [ $m -lt "5" ]; then
 		M=""
-elif [ $m -lt "13" ]; then
+	elif [ $m -lt "13" ]; then
 		M="⅙"
-elif [ $m -lt "18" ]; then
+	elif [ $m -lt "18" ]; then
 		M="¼"
-elif [ $m -lt "25" ]; then
+	elif [ $m -lt "25" ]; then
 		M="⅓"
-elif [ $m -lt "35" ]; then
+	elif [ $m -lt "35" ]; then
 		M="½"
-elif [ $m -lt "43" ]; then
+	elif [ $m -lt "43" ]; then
 		M="⅓"
-elif [ $m -lt "48" ]; then
+	elif [ $m -lt "48" ]; then
 		M="¼"
-elif [ $m -lt "55" ]; then
+	elif [ $m -lt "55" ]; then
 		M="⅙"
-else
+	else
 		M=""
+	fi
+else
+	if [ $m -lt "8" ]; then
+		M=""
+	elif [ $m -lt "23" ]; then
+		M="¼"
+	elif [ $m -lt "38" ]; then
+		M="½"
+	elif [ $m -lt "53" ]; then
+		M="¼"
+	else
+		M=""
+	fi
 fi
 
 if [ $m -gt "24" ]; then
