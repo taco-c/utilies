@@ -1,7 +1,7 @@
 #!/bin/sh
 
 usage() {
-	echo "nn.sh [-h] [-w PREVIRE_WINDOW_OPTS"
+	echo "nn.sh [-h] [-w PREVIRE_WINDOW_OPTS] [DIRECTORY]"
 	exit
 }
 
@@ -16,6 +16,7 @@ done
 shift $(($OPTIND - 1))
 
 [ -n "$1" ] && dir="$1" || dir="."
+cd "$dir"
 
 while : ; do
 	file="$(find "$dir" -type f -not -path "$dir/.git/*" -printf "%T@ %P\n" \
