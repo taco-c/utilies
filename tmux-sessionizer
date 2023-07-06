@@ -3,7 +3,7 @@
 if [ $# -eq 1 ]; then
     selected=$1
 else
-    dirs=$(find ~/src ~/work -mindepth 1 -maxdepth 1 -type d -follow)
+    dirs=$(find ~/src ~/work -mindepth 1 -maxdepth 1 -type d -follow 2>/dev/null)
 	dirs=$(echo -e "$dirs\n$HOME/bin\n$HOME/.local/tools")
     selected=$(echo "$dirs" | sed "s|$HOME|~|" | fzf)
 fi
