@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Configuration
 [ -n "$BIN_HOME" ] \
@@ -20,7 +20,7 @@ filename="$dir/$1"
 [ -f "$filename" ] && $EDITOR "$filename" && exit
 
 # File does not exist
-echo "#!/bin/sh\n\n" > "$filename"
+echo -e "#!/bin/sh\n\n" > "$filename"
 chmod +x "$filename"
 $EDITOR "$filename"
 
