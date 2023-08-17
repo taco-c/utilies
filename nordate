@@ -1,0 +1,35 @@
+#!/bin/sh
+
+orderize() {
+	case "$1" in
+		*4|*7|*8|*9|*10|*13|*14|*15|*16|*17|*18|*19|*0) printf "$1de" ;;
+		*5|*6|*11|*12) printf "$1te" ;;
+		*1) printf "$1ste" ;;
+		*2) printf "$1dre" ;;
+		*3) printf "$1dje" ;;
+	esac
+}
+
+month() {
+	case "$1" in
+		1) printf "januar" ;;
+		2) printf "februar" ;;
+		3) printf "mars" ;;
+		4) printf "april" ;;
+		5) printf "mai" ;;
+		6) printf "juni" ;;
+		7) printf "juli" ;;
+		8) printf "august" ;;
+		9) printf "september" ;;
+		10) printf "oktober" ;;
+		11) printf "november" ;;
+		12) printf "desember" ;;
+	esac
+}
+
+d=$(date +%-d)
+m=$(date +%-m)
+y=$(date +%Y)
+
+echo "$(orderize $d) $(month $m) $y"
+
