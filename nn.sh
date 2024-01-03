@@ -5,6 +5,10 @@ usage() {
 	exit
 }
 
+settitle() {
+	echo -ne "\e]1;nn.sh\a"
+}
+
 preview_window_opts="up,75%"
 
 while getopts "hw:" opt; do
@@ -17,6 +21,7 @@ shift $(($OPTIND - 1))
 
 [ -n "$1" ] && dir="$1" || dir="."
 cd "$dir"
+settitle
 
 while : ; do
 	file="$(find "$dir" -type f -not -path "$dir/.git/*" -printf "%T@ %P\n" \
@@ -29,5 +34,6 @@ while : ; do
 	[ "$?" = 130 ] && break
 	file="$(echo $file | sed -e 's| » |/|g')"
 	[ -n "$file" ] && nvim -c "ZenMode" "$file"
+	settitle
 done
 
