@@ -3,8 +3,10 @@
 if [ $# -eq 1 ]; then
     selected=$1
 else
-    dirs=$(find ~/src ~/work -mindepth 1 -maxdepth 1 -type d -follow 2>/dev/null)
-	dirs=$(echo -e "$dirs\n$HOME/bin\n$HOME/.local/tools")
+    dirs=$(find ~/src ~/work -mindepth 1 -maxdepth 1 -type d -follow 2>/dev/null | xargs realpath)
+	dirs=$(echo -e "$dirs\n$HOME/bin\n$HOME/.local/tools\n~/.config")
+	[ -d "$HOME/notater" ] && dirs=$(echo -e "$dirs\n$HOME/notater")
+	[ -d "$HOME/sync/notater" ] && dirs=$(echo -e "$dirs\n$HOME/sync/notater")
     selected=$(echo "$dirs" | sed "s|$HOME|~|" | fzf)
 fi
 
@@ -15,7 +17,7 @@ fi
 selected_name=$(basename $selected | tr . _)
 
 if [ -z "$(tmux ls 2>/dev/null | grep "^$selected_name")" ]; then
-	tmux new-session -ds $selected_name -c $selected
+	tmux new-session -ds $selected_name "cd $selected; $SHELL"
 fi
 
 [ -z "$TMUX" ] \
